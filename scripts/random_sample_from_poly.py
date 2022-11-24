@@ -10,7 +10,7 @@ LAND_COVER = ''
 
 # check if in FC is in the right format to split
 rows = [row[0] for row in arcpy.da.SearchCursor(TARGET, LAND_COVER)]
-unique = set(rows)
+land_covers = set(rows)
 
 is_dissolved = (len(rows) > len(unique))
 
@@ -20,13 +20,15 @@ if not is_dissolved:
         in_features=TARGET,
         out_feature_class=out_fc
     )
+    TARGET = out_fc
 
+for land_cover in land_covers:
+    arcpy.SelectLayerByAttribute_management(
+        in_layer_or_view=TARGET,
+        selection_type='NEW_SELECTION',
+        where_clause=f"[{LAND_COVER}] == '{land_cover}'"
+    )
 
-
-
-# set a tmp workspace to do all of the processing
-
-# split the dissolved polygon into seperate feature classes
 
 # iterate over each of the feature classes
 
