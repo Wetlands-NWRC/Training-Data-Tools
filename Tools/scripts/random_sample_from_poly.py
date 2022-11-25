@@ -5,7 +5,7 @@ import arcpy
 cwd = os.getcwd()
 arcpy.env.workspace = cwd
 arcpy.env.overwriteOutput = True
-
+# print(f"{#<'Script Starts'}")
 print(f"arcpy.env.workspace: {arcpy.env.workspace}")
 
 TARGET = 'training_data_un_dissolved'
@@ -41,8 +41,8 @@ for land_cover in land_covers:
     selection_ty = 'NEW_SELECTION'
     where = f"{LAND_COVER} = '{land_cover}'"
 
-    print('Exicuting: Select Layer By Attribute Mangement')
-    # log
+    print('Executing: Select Layer By Attribute Management')
+    # logging
     print(f"In layer = {TARGET}")
     print(f"selection_type = {selection_ty}")
     print(f'where_clause ={where}')
@@ -52,22 +52,32 @@ for land_cover in land_covers:
         selection_type=selection_ty,
         where_clause=where
     )
+    print('GP Tool Exits...\n')
     ###################################################
-
-    print('Exicuting: Create Random Points Management')
+    # tool pramaters
+    in_table = TARGET
+    out_path = os.path.join(arcpy.env.workspace, f'_{land_cover}_ran_pts')
+    bounding_fc = TARGET
+    number_of_points = 1000
+    min_allowed_distance = '25 Meters'
+    ###################################################
+    # logging
+    print('Executing: Create Random Points Management')
     # log
-    print(f"In layer = {TARGET}")
-    print(f"selection_type = {selection_ty}")
-    print(f'where_clause ={where}')
-    out_name = f'_{land_cover}_ran_pts'
+    print(f"in_table = {in_table}")
+    print(f"out_path = {out_path}")
+    print(f"constraining_feature_class = {bounding_fc}")
+    print(f"number_of_points_or_field = {number_of_points}")
+    print(f"minimum_allowed_distance = {min_allowed_distance}")
 
     arcpy.CreateRandomPoints_management(
-        in_table=out_name,
-        out_path=arcpy.env.workspace,
+        in_table=in_table,
+        out_path=out_path,
         constraining_feature_class=TARGET,
-        number_of_points_or_field=1000,
-        minimum_allowed_distance='25 Meters'
+        number_of_points_or_field=number_of_points,
+        minimum_allowed_distance=min_allowed_distance
     )
+    print("GP Tool Exits...\n")
     #################################################
 
     arcpy.CalculateField_management(
