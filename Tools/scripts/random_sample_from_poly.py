@@ -26,7 +26,8 @@ if not is_dissolved:
     out_fc = f'{TARGET}_dis'
     arcpy.Dissolve_management(
         in_features=TARGET,
-        out_feature_class=out_fc
+        out_feature_class=out_fc,
+        dissolve_field=[LAND_COVER]
     )
     TARGET = out_fc
     print(f'Target Feature Class: {TARGET}')
