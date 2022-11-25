@@ -33,13 +33,23 @@ for land_cover in land_covers:
         where_clause=f"[{LAND_COVER}] == '{land_cover}'"
     )
 
+    out_name = f'_{land_cover}_ran_pts'
 
+    arcpy.CreateRandomPoints_management(
+        in_table=out_name,
+        out_path=None,
+        constraining_feature_class=TARGET,
+        number_of_points_or_field=1000,
+        minimum_allowed_distance='25 Meters'
+    )
 
-# iterate over each of the feature classes
+    arcpy.CalculateField_management(
+        in_table=out_name,
+        field_type='SHORT',
+        expression=f'{land_cover}',
+        expression_type='PYTHON3',
+        field='land_cover'
+    )
 
-# specify a sampling paramaters i.e. min distance and number of points
-
-# for each feature class try to generate random points with the input paramater specified above
-
-# for each sample insert a column called land_cover, use field calc to insert land_cover type into FC
+    arcpy.SelectLayerByAttribute_management(TARGET, 'CLEAR_SELECTION')
 
