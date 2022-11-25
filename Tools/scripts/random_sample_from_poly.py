@@ -3,7 +3,7 @@ import os
 import arcpy
 
 cwd = os.getcwd()
-arcpy.env.workspace = "CURRENT"
+arcpy.env.workspace = cwd
 arcpy.env.overwriteOutput = True
 
 print(f"arcpy.env.workspace: {arcpy.env.workspace}")
@@ -18,7 +18,7 @@ land_covers = set(rows)
 print(f"nRows = {len(rows)}")
 print(f'nLand Covers = {len(land_covers)}')
 
-is_dissolved = (len(rows) > len(land_covers))
+is_dissolved = (len(rows) < len(land_covers))
 print(f"Is Dissolved: {is_dissolved}")
 
 if not is_dissolved:
