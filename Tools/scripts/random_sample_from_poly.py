@@ -15,11 +15,11 @@ LAND_COVER = 'land_cover'
 rows = [row[0] for row in arcpy.da.SearchCursor(TARGET, LAND_COVER)]
 land_covers = set(rows)
 
-print(f"nRows = {len(rows)}")
+print(f"\nnRows = {len(rows)}")
 print(f'nLand Covers = {len(land_covers)}')
 
 is_dissolved = (len(rows) < len(land_covers))
-print(f"Is Dissolved: {is_dissolved}")
+print(f"\nIs Dissolved: {is_dissolved}")
 
 if not is_dissolved:
     print(f"Dissolving: on {LAND_COVER}")
@@ -32,29 +32,43 @@ if not is_dissolved:
     TARGET = out_fc
     print(f'Target Feature Class: {TARGET}')
 
-print(f"{TARGET} is Dissolved... Proceeding to Point Generation")
+print(f"{TARGET} is Dissolved... Proceeding to Point Generation\n")
 
 for land_cover in land_covers:
-    print(f"Selecting: {land_cover}")
+    ####################################################
+    # tool paramaters
+    in_layer = TARGET
+    selection_ty = 'NEW_SELECTION'
+    where = f"{LAND_COVER} = '{land_cover}'"
+
+    print('Exicuting: Select Layer By Attribute Mangement')
     # log
     print(f"In layer = {TARGET}")
-    print("selection_type = 'NEW_SELECTION'")
+    print(f"selection_type = {selection_ty}")
+    print(f'where_clause ={where}')
 
     arcpy.SelectLayerByAttribute_management(
         in_layer_or_view=TARGET,
-        selection_type='NEW_SELECTION',
-        where_clause=f"{LAND_COVER} == '{land_cover}'"
+        selection_type=selection_ty,
+        where_clause=where
     )
+    ###################################################
 
+    print('Exicuting: Create Random Points Management')
+    # log
+    print(f"In layer = {TARGET}")
+    print(f"selection_type = {selection_ty}")
+    print(f'where_clause ={where}')
     out_name = f'_{land_cover}_ran_pts'
 
     arcpy.CreateRandomPoints_management(
         in_table=out_name,
-        out_path=None,
+        out_path=arcpy.env.workspace,
         constraining_feature_class=TARGET,
         number_of_points_or_field=1000,
         minimum_allowed_distance='25 Meters'
     )
+    #################################################
 
     arcpy.CalculateField_management(
         in_table=out_name,
@@ -66,3 +80,4 @@ for land_cover in land_covers:
 
     arcpy.SelectLayerByAttribute_management(TARGET, 'CLEAR_SELECTION')
 
+    print(f'END: {land_cover}\n')
