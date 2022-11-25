@@ -3,7 +3,9 @@ import os
 import arcpy
 
 cwd = os.getcwd()
-arcpy.env.workspace = cwd
+print(cwd)
+gdb = 'Tools\\Data\\TestData_3_0.gdb'
+arcpy.env.workspace = os.path.join(cwd, gdb)
 arcpy.env.overwriteOutput = True
 # print(f"{#<'Script Starts'}")
 print(f"arcpy.env.workspace: {arcpy.env.workspace}")
@@ -63,7 +65,6 @@ for land_cover in land_covers:
 
     # logging
     print('Executing: Create Random Points Management')
-    # log
     print(f"out_name = {out_name}")
     print(f"out_path = {out_path}")
     print(f"constraining_feature_class = {bounding_fc}")
@@ -79,15 +80,31 @@ for land_cover in land_covers:
     )
     print("GP Tool Exits...\n")
     #################################################
+    in_table = out_name
+    field_type = 'TEXT'
+    express = f'"{land_cover}"'
+    expres_ty = "PYTHON3"
+    field = 'land_cover'
+
+    # logging
+    print('Executing: Calculate Field Management')
+
+    print(f"in_table = {in_table}")
+    print(f"field = {field}")
+    print(f"field_type = {field_type}")
+    print(f"expression = {express}")
+    print(f"expression_type = {expres_ty}")
 
     arcpy.CalculateField_management(
         in_table=out_name,
-        field_type='SHORT',
-        expression=f'{land_cover}',
-        expression_type='PYTHON3',
-        field='land_cover'
+        field=field,
+        field_type=field_type,
+        expression=express,
+        expression_type=expres_ty
     )
-
+    print("GP Tool Exits...\n")
+    ##################################################
     arcpy.SelectLayerByAttribute_management(TARGET, 'CLEAR_SELECTION')
 
     print(f'END: {land_cover}\n')
+    break
