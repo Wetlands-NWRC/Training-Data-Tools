@@ -55,23 +55,23 @@ for land_cover in land_covers:
     print('GP Tool Exits...\n')
     ###################################################
     # tool pramaters
-    in_table = TARGET
-    out_path = os.path.join(arcpy.env.workspace, f'_{land_cover}_ran_pts')
+    out_name = f'_{land_cover}_ran_pts'
+    out_path = arcpy.env.workspace
     bounding_fc = TARGET
     number_of_points = 1000
     min_allowed_distance = '25 Meters'
-    ###################################################
+
     # logging
     print('Executing: Create Random Points Management')
     # log
-    print(f"in_table = {in_table}")
+    print(f"out_name = {out_name}")
     print(f"out_path = {out_path}")
     print(f"constraining_feature_class = {bounding_fc}")
     print(f"number_of_points_or_field = {number_of_points}")
     print(f"minimum_allowed_distance = {min_allowed_distance}")
 
     arcpy.CreateRandomPoints_management(
-        in_table=in_table,
+        out_name=out_name,
         out_path=out_path,
         constraining_feature_class=TARGET,
         number_of_points_or_field=number_of_points,
