@@ -35,7 +35,7 @@ if not is_dissolved:
     print(f'Target Feature Class: {TARGET}')
 
 print(f"{TARGET} is Dissolved... Proceeding to Point Generation\n")
-
+filenames = []
 for land_cover in land_covers:
     ####################################################
     # tool paramaters
@@ -105,6 +105,14 @@ for land_cover in land_covers:
     print("GP Tool Exits...\n")
     ##################################################
     arcpy.SelectLayerByAttribute_management(TARGET, 'CLEAR_SELECTION')
-
+    filenames.append(out_name)
     print(f'END: {land_cover}\n')
-    break
+
+######################################################
+print('Executing: Merge Management')
+print(f'inputs: {filenames}')
+
+arcpy.Merge_management(
+    inputs=filenames,
+    output=os.path.join(arcpy.env.workspace, "training_points")
+)
